@@ -2,7 +2,7 @@ Parameters:
   NameOfService:
       Description: "We are deploying a Hybrid Cloud Template."
       Type: String
-    KeyName:
+  KeyName:
       Description: Name of existing keypair used to initiate SSH access 
       Type: AWS::EC2::KeyPair::KeyName
 Mappings:

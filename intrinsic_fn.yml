@@ -5,8 +5,12 @@ Resources:
       InstanceType: t2.micro
       ImageId: ami-467ca739 # Amazon Linux AMI
       Tags:
-        - Key: Name
-          Value: !Join [" ", [330 AM EC2, Instance, with, Fn, Join]]
+        - Key: "Name"
+          Value: !Join
+            - ""
+            - - "330 AM EC2 Instance for "
+              - !Ref AWS::Region
+              - " and created using VS Code and CloudFormation!"
       SecurityGroups:
         - !Ref 330AMSecurityGroup
   330AMSecurityGroup:

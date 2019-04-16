@@ -1,0 +1,94 @@
+Parameters:
+  NameOfService:
+    Description: "We are deploying a Hybrid Cloud Template."
+    Type: String
+  KeyName:
+    Description: Name of existing keypair used to initiate SSH access
+    Type: AWS::EC2::KeyPair::KeyName
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-1853ac65
+    us-west-1:
+      AMI: ami-bf5540df
+    eu-west-1:
+      AMI: ami-3bfab942
+    ap-southeast-1:
+      AMI: ami-e2adf99e
+    ap-southeast-2:
+      AMI: ami-438747721
+Resources:
+  Ec2Instance:
+    Type: "AWS::EC2::Instance"
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          packages:
+            yum:
+              httpd: []
+              php: []
+              files:
+                /var/www/html/index.php:
+                content: !Sub |
+                  <? php print "This is a Hybrid Cloud Club Demo!"; ?>
+                  <? php print "Call us - 888-909-5555"; ?>
+              services:
+                sysvinit:
+                httpd:
+                  enabled: true
+                  ensureRunning: true
+    Properties:
+      InstanceType: t2.micro
+      ImageId:
+        Fn::FindInMap:
+          - RegionMap
+          - !Ref AWS::Region
+          - AMI
+      Tags:
+        - Key: "Name"
+          Value: !Join
+            - ""
+            - - "Hybrid Cloud Club EC2 Instance for "
+              - !Ref AWS::Region
+              - " and created using VS Code and CloudFormation!"
+        - Key: "Service"
+          Value: !Ref NameOfService
+      KeyName: !Ref KeyName
+      UserData:
+        "Fn::Base64": !Sub |
+          #!/bin/bash -xe
+          #Ensure AWS CFN Bootstrap is the latest
+          yum install -y aws -cfn-bootstrap
+          #Install the files and packages from the metadata
+          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
+      SecurityGroups:
+        - !Ref HBCCSecurityGroup
+  HBCCSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable Port 22 access (SSH) and Port 80 (HTTP)
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol; tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+Outputs:
+  Website:
+    Description: The pubicly accessible endpoint name for this great dynamic website.
+    Value: !Sub 'http://${EC2Instance.PublicDnsName}'
+  ServerDns:
+    Value: !GetAtt
+      - Ec2Instance
+      - PublicDnsName
+  ServerInternalIP:
+    Value: !GetAtt
+      - Ec2Instance
+      - PrivateIp
+  ServerZone:
+    Value: !GetAtt
+      - Ec2Instance
+      - AvailabilityZone

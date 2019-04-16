@@ -7,7 +7,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join [" ", [330 AM EC2, Instance, with, Fn, Join]]
-        SecurityGroups:
+        SecurityGroup:
         - !Ref 330AMSecurityGroup
   330AMSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'

@@ -53,5 +53,11 @@ Outputs:
     Value: !GetAtt
       - Ec2Instance
       - PublicDnsName
+  ServerInternalIP:
+    Value: !GetAtt
+      - Ec2Instance
+      - PrivateIp
+  ServerZone:
+    Value: !GetAtt
+      - Ec2Instance
       - AvailabilityZone
-      - SecurityGroups

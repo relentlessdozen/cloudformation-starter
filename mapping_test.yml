@@ -18,7 +18,7 @@ Resources:
       ImageId:
         Fn::FindInMap:
           - RegionMap
-          - !Ref AWSRegion
+          - !Ref AWS::Region
           - AMI
       Tags:
         - Key: "Name"

@@ -1,0 +1,50 @@
+Parameters:
+  NameOfService:
+      Description: "We are deploying a Hybrid Cloud Template."
+      Type: String
+    KeyName:
+      Description: Name of existing keypair used to initiate SSH access 
+      Type: AWS::EC2::KeyPair::KeyName
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-1853ac65
+    us-west-1:
+      AMI: ami-bf5540df
+    eu-west-1:
+      AMI: ami-3bfab942
+    ap-southeast-1:
+      AMI: ami-e2adf99e
+    ap-southeast-2:
+      AMI: ami-438747721
+Resources:
+  Ec2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: t2.micro
+      ImageId:
+        Fn::FindInMap:
+          - RegionMap
+          - !Ref AWS::Region
+          - AMI
+      Tags:
+        - Key: "Name"
+          Value: !Join
+            - ""
+            - - "Hybrid Cloud Club EC2 Instance for "
+              - !Ref AWS::Region
+              - " and created using VS Code and CloudFormation!"
+        - Key: "Service"
+          Value: !Ref NameOfService
+        KeyName: !Ref KeyName
+      SecurityGroups:
+        - !Ref HBCCSecurityGroup
+  330AMSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Enable Port 22 access (SSH)
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: 0.0.0.0/0

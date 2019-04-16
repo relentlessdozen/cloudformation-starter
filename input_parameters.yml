@@ -1,10 +1,10 @@
 Parameters:
   NameOfService:
-      Description: "We are deploying a Hybrid Cloud Template."
-      Type: String
+    Description: "We are deploying a Hybrid Cloud Template."
+    Type: String
   KeyName:
-      Description: Name of existing keypair used to initiate SSH access 
-      Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of existing keypair used to initiate SSH access
+    Type: AWS::EC2::KeyPair::KeyName
 Mappings:
   RegionMap:
     us-east-1:
@@ -36,7 +36,7 @@ Resources:
               - " and created using VS Code and CloudFormation!"
         - Key: "Service"
           Value: !Ref NameOfService
-        KeyName: !Ref KeyName
+      KeyName: !Ref KeyName
       SecurityGroups:
         - !Ref HBCCSecurityGroup
   330AMSecurityGroup:

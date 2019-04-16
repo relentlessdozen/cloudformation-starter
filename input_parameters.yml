@@ -39,7 +39,7 @@ Resources:
       KeyName: !Ref KeyName
       SecurityGroups:
         - !Ref HBCCSecurityGroup
-  330AMSecurityGroup:
+  HBCCSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
       GroupDescription: Enable Port 22 access (SSH)
